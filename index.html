@@ -290,6 +290,49 @@
             margin-top: 10px;
         }
 
+        /* قسم المشروبات المستقل */
+        .beverage-section {
+            border-color: #00b4d8;
+            background: linear-gradient(135deg, #f0faff 0%, #e8f7ff 100%);
+        }
+
+        .beverage-section:hover {
+            border-color: #0096c7;
+            box-shadow: 0 8px 20px rgba(0, 180, 216, 0.15);
+        }
+
+        .beverage-section h3 {
+            border-right-color: #00b4d8;
+        }
+
+        .beverage-section input[type="text"]:focus {
+            border-color: #00b4d8;
+            box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.12);
+        }
+
+        .beverage-section .search-icon {
+            color: #00b4d8;
+        }
+
+        .product-result-inline {
+            margin-top: 20px;
+            margin-bottom: 0;
+            border-radius: 14px;
+            font-size: 16px;
+            text-align: right;
+        }
+
+        .product-result-inline .product-info {
+            background: rgba(0, 180, 216, 0.07);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .product-result-inline .product-info:last-child {
+            margin-bottom: 0;
+        }
+
         /* responsive */
         @media (max-width: 600px) {
             .container {
@@ -343,12 +386,14 @@
                 type="text" 
                 id="searchInput" 
                 oninput="checkProduct()" 
-                placeholder="أكتب اسم الدواء (مثلاً: أوجمنتين، بروفين، نكسيوم)..."
+                placeholder="أكتب اسم الدواء (مثلاً: باندول، بروفين، أوجمنتين، نكسيوم)..."
             >
         </div>
     </div>
 
-    <div class="section">
+    <div id="result" class="result"></div>
+
+    <div class="section beverage-section">
         <h3>3️⃣ ابحث عن المشروبات والمنتجات:</h3>
         <div class="search-container">
             <span class="search-icon">🥤</span>
@@ -359,10 +404,8 @@
                 placeholder="أكتب اسم المشروب أو المنتج (مثلاً: ببسي، فانتا، شيبس)..."
             >
         </div>
+        <div id="productResult" class="result product-result-inline"></div>
     </div>
-
-    <div id="result" class="result"></div>
-    <div id="productResult" class="result"></div>
 
     <p class="footer-note">
         <strong>⚠️ تنبيه مهم:</strong> 
@@ -376,15 +419,67 @@
     const availableAllergies = [
         "بنسلين", "لاكتوز", "أسبرين", "سلفا", "باراسيتامول", 
         "ايبوبروفين", "كافيين", "كورتيزون", "مكسرات", "قمح",
-        "جلوتين", "ديكلوفيناك", "أزيثرومايسين", "إسبرين"
+        "جلوتين", "ديكلوفيناك", "أزيثرومايسين", "إسبرين",
+        "ميتاميزول", "فينيلفرين", "كلورفينيرامين", "ديفينهيدرامين"
     ];
 
     // قاعدة بيانات موسعة للأدوية
     const productsDB = [
-        // ✅ مسكنات ومسكنات الآلام
+        // ✅ باندول وأنواعه
+        { name: "باندول", ingredients: ["باراسيتامول"] },
         { name: "بانادول", ingredients: ["باراسيتامول"] },
-        { name: "فيفادول", ingredients: ["باراسيتامول"] },
+        { name: "باندول اكسترا", ingredients: ["باراسيتامول", "كافيين"] },
+        { name: "بانادول اكسترا", ingredients: ["باراسيتامول", "كافيين"] },
+        { name: "باندول نايت", ingredients: ["باراسيتامول", "ديفينهيدرامين"] },
+        { name: "بانادول نايت", ingredients: ["باراسيتامول", "ديفينهيدرامين"] },
+        { name: "باندول كولد آند فلو", ingredients: ["باراسيتامول", "كافيين", "فينيلفرين"] },
+        { name: "باندول للأطفال", ingredients: ["باراسيتامول"] },
+        { name: "باندول للرضع", ingredients: ["باراسيتامول"] },
+        { name: "باندول أكتيفاست", ingredients: ["باراسيتامول"] },
+        { name: "باندول سولوبل", ingredients: ["باراسيتامول", "بيكربونات الصوديوم"] },
+        { name: "باندول جل", ingredients: ["باراسيتامول"] },
+        { name: "باندول تحاميل", ingredients: ["باراسيتامول"] },
+        { name: "باندول مفرز", ingredients: ["باراسيتامول", "كافيين", "كوديين"] },
+        { name: "باندول راحة", ingredients: ["باراسيتامول", "ايبوبروفين"] },
+
+        // ✅ أدول وأنواعه
         { name: "أدول", ingredients: ["باراسيتامول"] },
+        { name: "ادول", ingredients: ["باراسيتامول"] },
+        { name: "أدول 500", ingredients: ["باراسيتامول"] },
+        { name: "أدول 250", ingredients: ["باراسيتامول"] },
+        { name: "أدول للأطفال", ingredients: ["باراسيتامول"] },
+        { name: "أدول للرضع", ingredients: ["باراسيتامول"] },
+        { name: "أدول كولد", ingredients: ["باراسيتامول", "فينيلفرين", "كافيين"] },
+        { name: "أدول إكسترا", ingredients: ["باراسيتامول", "كافيين"] },
+        { name: "أدول تحاميل", ingredients: ["باراسيتامول"] },
+        { name: "أدول فلو", ingredients: ["باراسيتامول", "كلورفينيرامين", "فينيلفرين"] },
+
+        // ✅ أدوية الحرارة
+        { name: "نوروفين", ingredients: ["ايبوبروفين"] },
+        { name: "نوروفين للأطفال", ingredients: ["ايبوبروفين"] },
+        { name: "نيوفين", ingredients: ["ايبوبروفين"] },
+        { name: "فيبروفين شراب", ingredients: ["ايبوبروفين"] },
+        { name: "تايلينول", ingredients: ["باراسيتامول"] },
+        { name: "تايلينول للأطفال", ingredients: ["باراسيتامول"] },
+        { name: "تايلينول للرضع", ingredients: ["باراسيتامول"] },
+        { name: "كالبول", ingredients: ["باراسيتامول"] },
+        { name: "كالبول للأطفال", ingredients: ["باراسيتامول"] },
+        { name: "كالبول شراب", ingredients: ["باراسيتامول", "سوكروز"] },
+        { name: "تيمبرا", ingredients: ["باراسيتامول"] },
+        { name: "تيمبرا للأطفال", ingredients: ["باراسيتامول"] },
+        { name: "إيبوفين", ingredients: ["ايبوبروفين"] },
+        { name: "بروفين شراب", ingredients: ["ايبوبروفين"] },
+        { name: "بروفين للأطفال", ingredients: ["ايبوبروفين"] },
+        { name: "أنالجين", ingredients: ["ميتاميزول"] },
+        { name: "ديبيرون", ingredients: ["ميتاميزول"] },
+        { name: "نوفالجين", ingredients: ["ميتاميزول"] },
+        { name: "إيفيرالجان", ingredients: ["باراسيتامول"] },
+        { name: "ايفيرالجان شراب", ingredients: ["باراسيتامول", "سوكروز"] },
+        { name: "ايفيرالجان تحاميل", ingredients: ["باراسيتامول"] },
+        { name: "ميكسفين", ingredients: ["باراسيتامول", "ايبوبروفين"] },
+
+        // ✅ مسكنات ومسكنات الآلام
+        { name: "فيفادول", ingredients: ["باراسيتامول"] },
         { name: "بارامول", ingredients: ["باراسيتامول"] },
         { name: "سولبادين", ingredients: ["باراسيتامول", "كودايين", "كافيين"] },
         { name: "بانادول اكسترا", ingredients: ["باراسيتامول", "كافيين"] },
@@ -978,7 +1073,7 @@
         resultDiv.style.display = "block";
 
         if (matches.length === 0) {
-            resultDiv.className = "result warning";
+            resultDiv.className = "result product-result-inline warning";
             resultDiv.innerHTML = `
                 <div class="result-title">⚠️ المنتج غير مسجل</div>
                 <p>لم نجد "${input}" في قاعدتنا. يرجى البحث عن منتج آخر أو مراجعة الملصق مباشرة.</p>
@@ -1015,7 +1110,7 @@
             `;
         });
 
-        resultDiv.className = "result info";
+        resultDiv.className = "result product-result-inline info";
         resultDiv.innerHTML = htmlResult;
     }
 </script>
